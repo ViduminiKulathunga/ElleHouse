@@ -1,5 +1,5 @@
 {
-  "name": "tinyhouse-v1-server",
+  "name": "viduhouse-server",
   "version": "0.1.0",
   "dependencies": {
     "@graphql-tools/utils": "^8.12.0",
