@@ -1,32 +1,20 @@
-import { Collection, ObjectId } from 'mongodb';
+import { Collection, ObjectId } from "mongodb";
+
+export interface Booking {
+  _id: ObjectId;
+}
 
 export interface Listing {
   _id: ObjectId;
-  title: string;
-  image: string;
-  address: string;
-  price: number;
-  numOfGuests: number;
-  numOfBeds: number;
-  numOfBaths: number;
-  rating: number;
+}
+
+export interface User {
+  _id: ObjectId;
 }
 
 export interface Database {
+  booking: Collection<Booking>;
   listings: Collection<Listing>;
+  users: Collection<User>;
 }
 
-// ---- Generics
-interface IdentityObj<T = number> {
-  field: T;
-}
-
-const identity = <TData = number, TVariables = number>(arg: TData): TData => {
-  const obt: IdentityObj<TData> = {
-    field: arg,
-  };
-  return ObjectId.field;
-};
-
-identity<number>(5);
-identity<string>('5'); 
