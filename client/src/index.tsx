@@ -4,7 +4,16 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import reportWebVitals from "./reportWebVitals";
-import { Listings, Home, Host, Listing, NotFound, User } from "./sections";
+import {
+  Listings,
+  Home,
+  Host,
+  Listing,
+  NotFound,
+  User,
+  Login,
+} from "./sections";
+import { Layout } from "antd";
 import "./styles/index.css";
 
 const root = document.getElementById("root");
@@ -16,15 +25,17 @@ const client = new ApolloClient({
 const App = () => {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/host" element={<Host />} />
-        <Route path="/listing/:id" element={<Listing />} />
-        <Route path="/listings/:location?" element={<Listings />} />
-        <Route path="/user/:id" element={<User />} />
-        <Route path="/login" element={<Home />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Layout id="app">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/host" element={<Host />} />
+          <Route path="/listing/:id" element={<Listing />} />
+          <Route path="/listings/:location?" element={<Listings />} />
+          <Route path="/user/:id" element={<User />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Layout>
     </Router>
   );
 };
