@@ -9,7 +9,7 @@ export const connectDatabase = async (): Promise<Database> => {
   const db = client.db("main");
 
   return {
-    booking: db.collection<Booking>("bookings"),
+    bookings: db.collection<Booking>("bookings"),
     listings: db.collection<Listing>("listings"),
     users: db.collection<User>("users"),
   };
