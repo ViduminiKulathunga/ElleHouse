@@ -3,7 +3,7 @@ import { google } from "googleapis";
 const auth = new google.auth.OAuth2(
   process.env.G_CLIENT_ID,
   process.env.G_CLIENT_SECRET,
-  `${process.env.G_PUBLIC_URL}/login`
+  `${process.env.PUBLIC_URL}/login`
 );
 
 export const Google = {
@@ -16,14 +16,13 @@ export const Google = {
   }),
   logIn: async (code: string) => {
     const { tokens } = await auth.getToken(code);
-
     auth.setCredentials(tokens);
 
-    const { data } = await google.people({ version: "v1", auth }).people.get({
+    const res = await google.people({ version: "v1", auth }).people.get({
       resourceName: "people/me",
-      personFields: "emailAddresses, name, photos",
+      personFields: "emailAddresses,names,photos",
     });
 
-    return { user: data };
+    return { user: res.data };
   },
 };

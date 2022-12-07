@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { render } from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ApolloClient from "apollo-boost";
@@ -13,8 +13,10 @@ import {
   User,
   Login,
 } from "./sections";
+import { Viewer } from "./lib/types";
 import { Layout } from "antd";
 import "./styles/index.css";
+import Avatar from "antd/es/avatar/avatar";
 
 const root = document.getElementById("root");
 
@@ -22,7 +24,17 @@ const client = new ApolloClient({
   uri: "/api",
 });
 
+const initalViewer: Viewer = {
+  id: null,
+  token: null,
+  avatar: null,
+  hasWallet: null,
+  didRequest: false,
+};
+
 const App = () => {
+  const [viewer, setViewer] = useState<Viewer>(initalViewer);
+
   return (
     <Router>
       <Layout id="app">
@@ -32,7 +44,10 @@ const App = () => {
           <Route path="/listing/:id" element={<Listing />} />
           <Route path="/listings/:location?" element={<Listings />} />
           <Route path="/user/:id" element={<User />} />
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/login"
+            element={<Login setViewer={(e) => setViewer(e)} />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>

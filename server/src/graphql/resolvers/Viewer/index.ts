@@ -17,9 +17,9 @@ const logInViaGoogle = async (
   }
 
   const userNameList = user.names && user.names?.length ? user.names : null;
-  const userPhotosList = user.photos && user.photos.length ? user.photos : null;
+  const userPhotosList = user.photos && user.photos?.length ? user.photos : null;
   const userEmailsList =
-    user.emailAddresses && user.emailAddresses.length
+    user.emailAddresses && user.emailAddresses?.length
       ? user.emailAddresses
       : null;
 
