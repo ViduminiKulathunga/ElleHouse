@@ -5,6 +5,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import reportWebVitals from "./reportWebVitals";
 import {
+  AppHeader,
   Listings,
   Home,
   Host,
@@ -14,7 +15,7 @@ import {
   Login,
 } from "./sections";
 import { Viewer } from "./lib/types";
-import { Layout } from "antd";
+import { Layout, Affix } from "antd";
 import "./styles/index.css";
 import Avatar from "antd/es/avatar/avatar";
 
@@ -38,6 +39,9 @@ const App = () => {
   return (
     <Router>
       <Layout id="app">
+        <Affix offsetTop={0} className="app_affix-header">
+          <AppHeader viewer={viewer} setViewer={setViewer}/>
+        </Affix>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/host" element={<Host />} />

@@ -1,3 +1,4 @@
+@import "~antd/dist/antd.css";
 @import url(https://fonts.googleapis.com/css?family=Sacramento);
 .menu {
   width: 100%;
@@ -10,7 +11,10 @@
     padding: 0;
   }
 }
-.app-header {
+.home_icon{
+  margin-right: 10px;
+}
+.ant-layout .ant-layout-header.app-header {
   display: flex;
   background: #fff;
   box-shadow: 0 2px 8px #f0f1f2;
