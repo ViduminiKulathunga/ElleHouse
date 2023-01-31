@@ -29,7 +29,7 @@ export const User = ({ viewer }: Props) => {
       <Content className="user">
         <PageSkeleton />
       </Content>
-    ); 
+    );
   }
 
   if (error) {
