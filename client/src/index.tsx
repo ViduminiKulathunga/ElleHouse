@@ -54,9 +54,9 @@ const App = () => {
       if (data && data.logIn) {
         setViewer(data.logIn);
 
-        if(data.logIn.token){
+        if (data.logIn.token) {
           sessionStorage.setItem("token", data.logIn.token);
-        }else{
+        } else {
           sessionStorage.removeItem("token");
         }
       }
@@ -96,7 +96,7 @@ const App = () => {
           <Route path="/host" element={<Host />} />
           <Route path="/listing/:id" element={<Listing />} />
           <Route path="/listings/:location?" element={<Listings />} />
-          <Route path="/user/:id" element={<User />} />
+          <Route path="/user/:id" element={<User viewer={viewer} />} />
           <Route
             path="/login"
             element={<Login setViewer={(e) => setViewer(e)} />}
