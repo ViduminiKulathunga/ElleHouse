@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-apollo";
 import { Col, Layout, Row } from "antd";
@@ -9,18 +9,25 @@ import {
 } from "../../lib/graphql/quaries/User/__generated__/User";
 import { Viewer } from "../../lib/types";
 import { PageSkeleton, ErrorBanner } from "../../lib/components";
-import { UserProfile } from "./components";
+import { UserBookings, UserListings, UserProfile } from "./components";
 
 interface Props {
   viewer: Viewer;
 }
 
 const { Content } = Layout;
+const PAGE_LIMIT = 4;
 
 export const User = ({ viewer }: Props) => {
+  const [listingsPage, setListingsPage] = useState(1);
+  const [bookingsPage, setBookingsPage] = useState(1);
+
   const { data, loading, error } = useQuery<UserData, UserVariables>(USER, {
     variables: {
       id: useParams().id!,
+      bookingsPage,
+      listingsPage,
+      limit: PAGE_LIMIT,
     },
   });
 
@@ -43,14 +50,40 @@ export const User = ({ viewer }: Props) => {
 
   const user = data ? data.user : null;
   const viewerIsUser = viewer.id === useParams().id;
+
+  const userListings = user ? user.listings : null;
+  const userBookings = user ? user.bookings : null;
+
   const userProfileElement = user ? (
     <UserProfile user={user} viewerIsUser={viewerIsUser} />
+  ) : null;
+
+  const userListingsElement = userListings ? (
+    <UserListings
+      userListings={userListings}
+      listingsPage={listingsPage}
+      limit={PAGE_LIMIT}
+      setListingsPage={setListingsPage}
+    />
+  ) : null;
+
+  const userBookingsElement = userListings ? (
+    <UserBookings
+      userBookings={userBookings}
+      bookingsPage={bookingsPage}
+      limit={PAGE_LIMIT}
+      setBookingsPage={setBookingsPage}
+    />
   ) : null;
 
   return (
     <Content className="user">
       <Row gutter={12} type="flex" justify="space-between">
         <Col xs={24}>{userProfileElement}</Col>
+        <Col xs={24}>
+          {userListingsElement}
+          {userBookingsElement}
+        </Col>
       </Row>
     </Content>
   );
