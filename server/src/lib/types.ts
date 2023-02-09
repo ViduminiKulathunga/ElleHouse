@@ -42,10 +42,11 @@ export interface Listing {
   country: string;
   admin: string;
   city: string;
-  bookings: [];
+  bookings: ObjectId[];
   bookingsIndex: BookingsIndex;
   price: number;
   numOfGuests: number;
+  authorized?: boolean;
 }
 
 export interface User {
