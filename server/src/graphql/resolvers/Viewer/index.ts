@@ -77,6 +77,8 @@ const logInViaGoogle = async (
       listings: [],
     });
 
+    console.log("insertResult ", insertResult);
+
     insertId = insertResult.insertedId;
     viewer = {
       _id: userId,

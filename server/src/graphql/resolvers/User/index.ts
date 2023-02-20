@@ -57,11 +57,11 @@ export const userResolvers: IResolvers = {
 
         const data: UserBookingsData = {
           total: 0,
-          result: []
+          result: [],
         };
 
         let cursor = await db.bookings.find({
-          _id: { $in: user.bookings }
+          _id: { $in: user.bookings },
         });
 
         cursor = cursor.skip(page > 0 ? (page - 1) * limit : 0);
@@ -83,11 +83,11 @@ export const userResolvers: IResolvers = {
       try {
         const data: UserListingsData = {
           total: 0,
-          result: []
+          result: [],
         };
 
         let cursor = await db.listings.find({
-          _id: { $in: user.listings }
+          _id: { $in: user.listings },
         });
 
         cursor = cursor.skip(page > 0 ? (page - 1) * limit : 0);
@@ -100,6 +100,6 @@ export const userResolvers: IResolvers = {
       } catch (error) {
         throw new Error(`Failed to query user listings: ${error}`);
       }
-    }
+    },
   },
 };
