@@ -47,6 +47,7 @@ const logInViaGoogle = async (
     throw new Error("Google login Error");
   }
 
+  // income: 0, bookings: [], listings: [] --> remove from updateRes
   const updateRes = await db.users.findOneAndUpdate(
     { _id: userId },
     {
@@ -55,6 +56,9 @@ const logInViaGoogle = async (
         avatar: userAvatar,
         contact: userEmail,
         token,
+        income: 0,
+        bookings: [],
+        listings: [],
       },
     },
     {
