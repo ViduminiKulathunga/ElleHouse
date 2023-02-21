@@ -5,7 +5,7 @@ import { Google, Stripe } from "../../../lib/api";
 import { Viewer, Database, User } from "../../../lib/types";
 import { LogInArgs, ConnectStripeArgs } from "./types";
 import { SDLValidationContext } from "graphql/validation/ValidationContext";
-import { authorize } from "../../../lib/utils";
+import { authorize, authorizeStripe } from "../../../lib/utils";
 
 const cookieOptions = {
   httpOnly: true,
@@ -179,7 +179,7 @@ export const viewResolvers: IResolvers = {
       try {
         const { code } = input;
 
-        let viewer = await authorize(db, req);
+        let viewer = await authorizeStripe(db, req);
         if (!viewer) {
           throw new Error("viewer cannot be found");
         }

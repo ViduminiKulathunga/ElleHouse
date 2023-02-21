@@ -13,6 +13,7 @@ import {
   NotFound,
   User,
   Login,
+  Stripe,
 } from "./sections";
 import { LOG_IN } from "./lib/graphql/mutations";
 import {
@@ -100,6 +101,10 @@ const App = () => {
           <Route
             path="/login"
             element={<Login setViewer={(e) => setViewer(e)} />}
+          />
+          <Route
+            path="/stripe"
+            element={<Stripe viewer={viewer} setViewer={(e) => setViewer(e)} />}
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
