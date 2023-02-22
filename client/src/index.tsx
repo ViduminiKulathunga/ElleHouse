@@ -97,7 +97,10 @@ const App = () => {
           <Route path="/host" element={<Host />} />
           <Route path="/listing/:id" element={<Listing viewer={viewer} />} />
           <Route path="/listings/:location" element={<Listings />} />
-          <Route path="/user/:id" element={<User viewer={viewer} />} />
+          <Route
+            path="/user/:id"
+            element={<User viewer={viewer} setViewer={(e) => setViewer(e)} />}
+          />
           <Route
             path="/login"
             element={<Login setViewer={(e) => setViewer(e)} />}

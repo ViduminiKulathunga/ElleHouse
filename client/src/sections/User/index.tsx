@@ -10,26 +10,37 @@ import {
 import { Viewer } from "../../lib/types";
 import { PageSkeleton, ErrorBanner } from "../../lib/components";
 import { UserBookings, UserListings, UserProfile } from "./components";
+import { useScrollToTop } from "../../lib/hooks";
 
 interface Props {
   viewer: Viewer;
+  setViewer: (viewer: Viewer) => void;
 }
 
 const { Content } = Layout;
 const PAGE_LIMIT = 4;
 
-export const User = ({ viewer }: Props) => {
+export const User = ({ viewer, setViewer }: Props) => {
   const [listingsPage, setListingsPage] = useState(1);
   const [bookingsPage, setBookingsPage] = useState(1);
 
-  const { data, loading, error } = useQuery<UserData, UserVariables>(USER, {
-    variables: {
-      id: useParams().id!,
-      bookingsPage,
-      listingsPage,
-      limit: PAGE_LIMIT,
-    },
-  });
+  const { data, loading, error, refetch } = useQuery<UserData, UserVariables>(
+    USER,
+    {
+      variables: {
+        id: useParams().id!,
+        bookingsPage,
+        listingsPage,
+        limit: PAGE_LIMIT,
+      },
+    }
+  );
+
+  useScrollToTop();
+
+  const handleUserRefetch = async () => {
+    await refetch();
+  };
 
   const stripeError = new URL(window.location.href).searchParams.get(
     "stripe_error"
@@ -62,7 +73,13 @@ export const User = ({ viewer }: Props) => {
   const userBookings = user ? user.bookings : null;
 
   const userProfileElement = user ? (
-    <UserProfile user={user} viewerIsUser={viewerIsUser} />
+    <UserProfile
+      user={user}
+      viewerIsUser={viewerIsUser}
+      viewer={viewer}
+      setViewer={setViewer}
+      handleUserRefetch={handleUserRefetch}
+    />
   ) : null;
 
   const userListingsElement = userListings ? (
