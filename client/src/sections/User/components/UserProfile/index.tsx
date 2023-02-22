@@ -1,6 +1,11 @@
-import React from "react";
-import { Avatar, Card, Divider, Typography, Button } from "antd";
+import React, { Fragment } from "react";
+import { Avatar, Card, Divider, Typography, Button, Tag } from "antd";
 import { User as UserData } from "../../../../lib/graphql/quaries/User/__generated__/User";
+import {
+  formatListingPrice,
+  displaySuccessNotification,
+  displayErrorMessage,
+} from "../../../../lib/utils";
 
 interface Props {
   user: UserData["user"];
@@ -15,33 +20,64 @@ export const UserProfile = ({ user, viewerIsUser }: Props) => {
     window.location.href = stripeAuthUrl;
   };
 
+  const additionalDetails = user.hasWallet ? (
+    <Fragment>
+      <Paragraph>
+        <Tag color="green">Stripe Registered</Tag>
+      </Paragraph>
+      <Paragraph>
+        Income Earned:{" "}
+        <Text strong>
+          {user.income ? formatListingPrice(user.income) : `$0`}
+        </Text>
+      </Paragraph>
+      <Button
+        type="primary"
+        className="user-profile__details-cta"
+        loading={false}
+        onClick={() => {}}
+      >
+        Disconnect Stripe
+      </Button>
+      <Paragraph type="secondary">
+        By disconnecting, you won't be able to receive{" "}
+        <Text strong>any further payments</Text>. This will prevent users from
+        booking listings that you might have already created.
+      </Paragraph>
+    </Fragment>
+  ) : (
+    <Fragment>
+      <Paragraph>
+        Interested in becoming a TinyHouse host? Register with your Stripe
+        account!
+      </Paragraph>
+      <Button
+        type="primary"
+        className="user-profile__details-cta"
+        onClick={redirectToStripe}
+      >
+        Connect with Stripe
+      </Button>
+      <Paragraph type="secondary">
+        TinyHouse uses{" "}
+        <a
+          href="https://stripe.com/en-US/connect"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Stripe
+        </a>{" "}
+        to help transfer your earnings in a secure and truster manner.
+      </Paragraph>
+    </Fragment>
+  );
+
   const additionalDetailsSection = viewerIsUser ? (
     <>
       <Divider />
       <div className="user-profile__details">
         <Title level={4}>Additional Details</Title>
-        <Paragraph>
-          Interested in becoming a ViduHouse host? Register with your Stripe
-          account!
-        </Paragraph>
-        <Button
-          type="primary"
-          className="user-profile__details-cta"
-          onClick={redirectToStripe}
-        >
-          Connect with Stripe
-        </Button>
-        <Paragraph type="secondary">
-          ViduHouse uses{" "}
-          <a
-            href="https://stripe.come/en-US/connect"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Stripe
-          </a>
-          to help transfer your earnings in a secure and truster manner.
-        </Paragraph>
+        {additionalDetails}
       </div>
     </>
   ) : null;
