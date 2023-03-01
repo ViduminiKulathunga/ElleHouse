@@ -3,7 +3,7 @@ import { Request } from "express";
 import { ObjectId } from "mongodb";
 import { Google, Cloudinary } from "../../../lib/api";
 import { Database, Listing, User, ListingType } from "../../../lib/types";
-import { authorize } from "../../../lib/utils";
+import { authorize, authorizeStripe } from "../../../lib/utils";
 import {
   ListingArgs,
   ListingBookingsArgs,
@@ -119,7 +119,7 @@ export const listingResolvers: IResolvers = {
     ): Promise<Listing> => {
       verifyHostListingInput(input);
 
-      let viewer = await authorize(db, req);
+      let viewer = await authorizeStripe(db, req);
       if (!viewer) {
         throw new Error("viewer cannot be found");
       }
@@ -129,12 +129,13 @@ export const listingResolvers: IResolvers = {
         throw new Error("invalid address input");
       }
 
-      const imageUrl = await Cloudinary.upload(input.image);
+      //const imageUrl = await Cloudinary.upload(input.image);
 
       const insertData: any = {
         _id: new ObjectId(),
         ...input,
-        image: imageUrl,
+        image:
+          "https://res.cloudinary.com/tiny-house/image/upload/v1560641352/mock/Toronto/toronto-listing-1_exv0tf.jpg",
         bookings: [],
         bookingsIndex: {},
         country,

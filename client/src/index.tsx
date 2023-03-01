@@ -8,7 +8,7 @@ import {
   AppHeader,
   Listings,
   Home,
-  Host,
+  WrappedHost as Host,
   Listing,
   NotFound,
   User,
@@ -94,7 +94,7 @@ const App = () => {
         </Affix>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/host" element={<Host />} />
+          <Route path="/host" element={<Host viewer={viewer} />} />
           <Route path="/listing/:id" element={<Listing viewer={viewer} />} />
           <Route path="/listings/:location" element={<Listings />} />
           <Route
