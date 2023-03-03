@@ -129,13 +129,12 @@ export const listingResolvers: IResolvers = {
         throw new Error("invalid address input");
       }
 
-      //const imageUrl = await Cloudinary.upload(input.image);
+      const imageUrl = await Cloudinary.upload(input.image);
 
       const insertData: any = {
         _id: new ObjectId(),
         ...input,
-        image:
-          "https://res.cloudinary.com/tiny-house/image/upload/v1560641352/mock/Toronto/toronto-listing-1_exv0tf.jpg",
+        image: imageUrl,
         bookings: [],
         bookingsIndex: {},
         country,
