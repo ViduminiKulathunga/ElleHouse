@@ -74,7 +74,7 @@ export const typeDefs = gql`
     code: String!
   }
 
-  input HostListingInput{
+  input HostListingInput {
     title: String!
     description: String!
     image: String!
@@ -82,6 +82,13 @@ export const typeDefs = gql`
     address: String!
     price: Int!
     numOfGuests: Int!
+  }
+
+  input CreateBookingInput {
+    id: ID!
+    source: String!
+    checkIn: String!
+    checkOut: String!
   }
 
   type Query {
@@ -102,5 +109,6 @@ export const typeDefs = gql`
     connectStripe(input: ConnectStripeInput!): Viewer!
     disconnectStripe: Viewer!
     hostListing(input: HostListingInput!): Listing!
+    createBooking(input: CreateBookingInput!): Booking!
   }
 `;
