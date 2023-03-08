@@ -75,6 +75,8 @@ export const Listing = ({ viewer }: Props) => {
 
   const listingCreateBookingElement = listing ? (
     <ListingCreateBooking
+      viewer={viewer}
+      host={listing.host}
       price={listing.price}
       checkInDate={checkInDate}
       checkOutDate={checkOutDate}
