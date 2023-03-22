@@ -1,10 +1,10 @@
 import React from "react";
 import { Button, Card, DatePicker, Divider, Typography } from "antd";
-import moment, { Moment } from "moment";
 import { displayErrorMessage, formatListingPrice } from "../../../../lib/utils";
 import { Viewer } from "../../../../lib/types";
 import { Listing as ListingData } from "../../../../lib/graphql/quaries/Listing/__generated__/Listing";
 import { BookingsIndex } from "./types";
+import moment, {Moment} from "moment";
 
 const { Paragraph, Title, Text } = Typography;
 
@@ -17,6 +17,7 @@ interface Props {
   checkOutDate: Moment | null;
   setCheckInDate: (checkInDate: Moment | null) => void;
   setCheckOutDate: (checkOutDate: Moment | null) => void;
+  setModalVisible: (modalVisible: boolean) => void;
 }
 
 export const ListingCreateBooking = ({
@@ -28,6 +29,7 @@ export const ListingCreateBooking = ({
   checkOutDate,
   setCheckInDate,
   setCheckOutDate,
+  setModalVisible
 }: Props) => {
   const bookingsIndexJSON: BookingsIndex = JSON.parse(bookingsIndex);
 
@@ -43,7 +45,7 @@ export const ListingCreateBooking = ({
     }
   };
 
-  const disabledDate = (currentDate?: Moment) => {
+  const disabledDate = (currentDate?:any ) => {
     if (currentDate) {
       const dateIsBeforeEndOfDay = currentDate.isBefore(moment().endOf("day"));
       const dateIsMoreThanThreeMonthsAhead = moment(currentDate).isAfter(
@@ -148,6 +150,7 @@ export const ListingCreateBooking = ({
           size="large"
           type="primary"
           className="listing-booking__card-cta"
+          onClick={() => setModalVisible(true)}
         >
           Request to book!
         </Button>

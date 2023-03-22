@@ -3,7 +3,7 @@ import { Request } from "express";
 import { ObjectId } from "mongodb";
 import { Stripe } from "../../../lib/api";
 import { Database, Booking, Listing, BookingsIndex } from "../../../lib/types";
-import { authorize } from "../../../lib/utils";
+import { authorize, authorizeStripe } from "../../../lib/utils";
 import { CreateBookingArgs } from "./types";
 
 const millisecondsPerDay = 86400000;
@@ -54,7 +54,7 @@ export const bookingResolvers: IResolvers = {
       try {
         const { id, source, checkIn, checkOut } = input;
 
-        let viewer = await authorize(db, req);
+        let viewer = await authorizeStripe(db, req);
         if (!viewer) {
           throw new Error("viewer cannot be found");
         }

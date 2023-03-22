@@ -1,20 +1,27 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
-import { Col, Layout, Row } from "antd";
+import { Col, Layout, Row, Modal } from "antd";
 import { Moment } from "moment";
 import { ErrorBanner, PageSkeleton } from "../../lib/components";
-import { LISTING } from "../../lib/graphql/quaries/Listing";
+import { LISTING } from "../../lib/graphql/quaries";
 import {
   Listing as ListingData,
   ListingVariables,
 } from "../../lib/graphql/quaries/Listing/__generated__/Listing";
+import { useScrollToTop } from "../../lib/hooks";
+import { Viewer } from "../../lib/types";
 import {
-  ListingCreateBooking,
   ListingBookings,
+  ListingCreateBooking,
+  ListingCreateBookingModal,
   ListingDetails,
 } from "./components";
-import { Viewer } from "../../lib/types";
+
+interface MatchParams {
+  id: string;
+}
+
 interface Props {
   viewer: Viewer;
 }
@@ -26,19 +33,32 @@ export const Listing = ({ viewer }: Props) => {
   const [bookingsPage, setBookingsPage] = useState(1);
   const [checkInDate, setCheckInDate] = useState<Moment | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const { id } = useParams<{ id: string }>();
 
-  const { loading, data, error } = useQuery<ListingData, ListingVariables>(
-    LISTING,
-    {
-      variables: {
-        id: id!,
-        bookingsPage,
-        limit: PAGE_LIMIT,
-      },
-    }
-  );
+  const { loading, data, error, refetch } = useQuery<
+    ListingData,
+    ListingVariables
+  >(LISTING, {
+    variables: {
+      id: id!,
+      bookingsPage,
+      limit: PAGE_LIMIT,
+    },
+  });
+
+  useScrollToTop();
+
+  const clearBookingData = () => {
+    setModalVisible(false);
+    setCheckInDate(null);
+    setCheckOutDate(null);
+  };
+
+  const handleListingRefetch = async () => {
+    await refetch();
+  };
 
   if (loading) {
     return (
@@ -83,8 +103,23 @@ export const Listing = ({ viewer }: Props) => {
       checkOutDate={checkOutDate}
       setCheckInDate={setCheckInDate}
       setCheckOutDate={setCheckOutDate}
+      setModalVisible={setModalVisible}
     />
   ) : null;
+
+  const listingCreateBookingModalElement =
+    listing && checkInDate && checkOutDate ? (
+      <ListingCreateBookingModal
+        id={listing.id}
+        price={listing.price}
+        modalVisible={modalVisible}
+        checkInDate={checkInDate}
+        checkOutDate={checkOutDate}
+        setModalVisible={setModalVisible}
+        clearBookingData={clearBookingData}
+        handleListingRefetch={handleListingRefetch}
+      />
+    ) : null;
 
   return (
     <Content className="listings">
@@ -97,6 +132,7 @@ export const Listing = ({ viewer }: Props) => {
           {listingCreateBookingElement}
         </Col>
       </Row>
+      {listingCreateBookingModalElement}
     </Content>
   );
 };
