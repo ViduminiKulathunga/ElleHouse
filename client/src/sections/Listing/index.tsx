@@ -18,6 +18,10 @@ import {
   ListingDetails,
 } from "./components";
 
+// import {StripeProvider, Elements} from 'react-stripe-elements';
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
 interface MatchParams {
   id: string;
 }
@@ -36,6 +40,10 @@ export const Listing = ({ viewer }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const { id } = useParams<{ id: string }>();
+
+  const stripePromise = loadStripe(
+    `${process.env.REACT_APP_S_PUBLISHABLE_KEY}`
+  );
 
   const { loading, data, error, refetch } = useQuery<
     ListingData,
@@ -132,7 +140,10 @@ export const Listing = ({ viewer }: Props) => {
           {listingCreateBookingElement}
         </Col>
       </Row>
-      {listingCreateBookingModalElement}
+
+      <Elements stripe={stripePromise}>
+        {listingCreateBookingModalElement}
+      </Elements>
     </Content>
   );
 };

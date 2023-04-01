@@ -1,12 +1,7 @@
-import React, { useContext, createContext } from "react";
+import React from "react";
 import { useMutation } from "@apollo/react-hooks";
-// import {
-//   CardElement,
-//   injectStripe,
-//   ReactStripeElements,
-// } from "react-stripe-elements";
-import { CardElement, useStripe, useElements, createToken } from "@stripe/react-stripe-js";
-import {Elements} from '@stripe/react-stripe-js';
+// import { CardElement, injectStripe, ReactStripeElements } from "react-stripe-elements";
+import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { Button, Divider, Icon, Modal, Typography } from "antd";
 import moment, { Moment } from "moment";
 import { CREATE_BOOKING } from "../../../../lib/graphql/mutations/CreateBooking";
@@ -33,20 +28,19 @@ interface Props {
 
 const { Paragraph, Text, Title } = Typography;
 
-export const ListingCreateBookingModal = (props: any) => {
-  const {
-    id,
-    price,
-    modalVisible,
-    checkInDate,
-    checkOutDate,
-    setModalVisible,
-    clearBookingData,
-    handleListingRefetch,
-  } = props;
-
+export const ListingCreateBookingModal = ({
+  id,
+  price,
+  modalVisible,
+  checkInDate,
+  checkOutDate,
+  setModalVisible,
+  clearBookingData,
+  handleListingRefetch,
+}: Props) => {
   const stripe = useStripe();
   const elements = useElements();
+
   const [createBooking, { loading }] = useMutation<
     CreateBookingData,
     CreateBookingVariables
@@ -70,18 +64,18 @@ export const ListingCreateBookingModal = (props: any) => {
   const listingPrice = price * daysBooked;
 
   const handleCreateBooking = async () => {
-    if (!stripe ) {
+    let cardElement;
+    if (elements) {
+      cardElement = elements.getElement("card");
+    }
+
+    if (!stripe) {
       return displayErrorMessage(
         "Sorry! We weren't able to connect with Stripe."
       );
     }
-
-    // let { token: stripeToken, error } = await stripe.createToken();
-    const cardElement = await stripe.createToken();
-    if (cardElement) {
-      const { error, token: stripeToken } = await stripe.createToken(
-        cardElement
-      );
+    if (stripe && cardElement) {
+      let { token: stripeToken, error } = await stripe.createToken(cardElement);
       if (stripeToken) {
         createBooking({
           variables: {
@@ -104,74 +98,65 @@ export const ListingCreateBookingModal = (props: any) => {
   };
 
   return (
-    <>
-      <Modal
-        visible={modalVisible}
-        centered
-        footer={null}
-        onCancel={() => setModalVisible(false)}
-      >
-        <div className="listing-booking-modal">
-          <div className="listing-booking-modal__intro">
-            <Title className="listing-boooking-modal__intro-title">
-              <Icon type="key"></Icon>
-            </Title>
-            <Title level={3} className="listing-boooking-modal__intro-title">
-              Book your trip
-            </Title>
-            <Paragraph>
-              Enter your payment information to book the listing from the dates
-              between{" "}
-              <Text mark strong>
-                {moment(checkInDate).format("MMMM Do YYYY")}
-              </Text>{" "}
-              and{" "}
-              <Text mark strong>
-                {moment(checkOutDate).format("MMMM Do YYYY")}
-              </Text>
-              , inclusive.
-            </Paragraph>
-          </div>
-
-          <Divider />
-
-          <div className="listing-booking-modal__charge-summary">
-            <Paragraph>
-              {formatListingPrice(price, false)} * {daysBooked} days ={" "}
-              <Text strong>{formatListingPrice(listingPrice, false)}</Text>
-            </Paragraph>
-            <Paragraph className="listing-booking-modal__charge-summary-total">
-              Total ={" "}
-              <Text mark>{formatListingPrice(listingPrice, false)}</Text>
-            </Paragraph>
-          </div>
-
-          <Divider />
-
-          <div className="listing-booking-modal__stripe-card-section">
-            <CardElement
-             
-              className="listing-booking-modal__stripe-card"
-            />
-            <Button
-              size="large"
-              type="primary"
-              className="listing-booking-modal__cta"
-              loading={loading}
-              onClick={() => handleCreateBooking()}
-              // onClick={() => {}}
-            >
-              Book
-            </Button>
-          </div>
+    <Modal
+      visible={modalVisible}
+      centered
+      footer={null}
+      onCancel={() => setModalVisible(false)}
+    >
+      <div className="listing-booking-modal">
+        <div className="listing-booking-modal__intro">
+          <Title className="listing-boooking-modal__intro-title">
+            <Icon type="key"></Icon>
+          </Title>
+          <Title level={3} className="listing-boooking-modal__intro-title">
+            Book your trip
+          </Title>
+          <Paragraph>
+            Enter your payment information to book the listing from the dates
+            between{" "}
+            <Text mark strong>
+              {moment(checkInDate).format("MMMM Do YYYY")}
+            </Text>{" "}
+            and{" "}
+            <Text mark strong>
+              {moment(checkOutDate).format("MMMM Do YYYY")}
+            </Text>
+            , inclusive.
+          </Paragraph>
         </div>
-      </Modal>
-    </>
+
+        <Divider />
+
+        <div className="listing-booking-modal__charge-summary">
+          <Paragraph>
+            {formatListingPrice(price, false)} * {daysBooked} days ={" "}
+            <Text strong>{formatListingPrice(listingPrice, false)}</Text>
+          </Paragraph>
+          <Paragraph className="listing-booking-modal__charge-summary-total">
+            Total = <Text mark>{formatListingPrice(listingPrice, false)}</Text>
+          </Paragraph>
+        </div>
+
+        <Divider />
+
+        <div className="listing-booking-modal__stripe-card-section">
+          <CardElement className="listing-booking-modal__stripe-card" />
+
+          <Button
+            size="large"
+            type="primary"
+            className="listing-booking-modal__cta"
+            loading={loading}
+            onClick={handleCreateBooking}
+          >
+            Book
+          </Button>
+        </div>
+      </div>
+    </Modal>
   );
 };
 
-// export const WrappedListingCreateBookingModal = injectStripe(
-//   ListingCreateBookingModal
-// );
-
+// export const WrappedListingCreateBookingModal = injectStripe(ListingCreateBookingModal);
 export default ListingCreateBookingModal;
