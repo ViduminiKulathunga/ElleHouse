@@ -51,9 +51,10 @@ export const userResolvers: IResolvers = {
       { db }: { db: Database }
     ): Promise<UserBookingsData | null> => {
       try {
-        if (!user.authorized) {
-          return null;
-        }
+        
+        // if (!user.authorized) {
+        //   return null;
+        // }
 
         const data: UserBookingsData = {
           total: 0,
