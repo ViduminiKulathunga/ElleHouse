@@ -158,5 +158,4 @@ export const ListingCreateBookingModal = ({
   );
 };
 
-// export const WrappedListingCreateBookingModal = injectStripe(ListingCreateBookingModal);
 export default ListingCreateBookingModal;
